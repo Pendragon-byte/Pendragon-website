@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steven Haihambo | Cinematographer &amp; Director of Photography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+  :root {
+    --bg: #17171a;
+    --surface: #1d1d21;
+    --surface-2: #232327;
+    --text: #f4efe4;
+    --text-soft: #cfc9bc;
+    --text-muted: #8f8a7e;
+    --brass: #b0894a;
+    --brass-light: #c9a06a;
+    --border: #322f28;
+    --border-soft: #26241f;
+    --serif-display: 'Oswald', 'Arial Narrow', sans-serif;
+    --sans: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 400; line-height: 1.6; overflow-x: hidden; }
+  ::selection { background: var(--brass); color: #17171a; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+  input { font-family: inherit; }
+
+  /* ---------- Nav ---------- */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: rgba(23,23,26,0.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-soft); }
+  .nav-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; background: none; border: none; }
+  .nav-brand img { height: 34px; width: auto; display: block; }
+  .nav-brand span { font-family: var(--serif-display); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-soft); }
+  .nav-right { display: flex; align-items: center; gap: 26px; }
+  .nav-links { display: flex; gap: 30px; list-style: none; }
+  .nav-links button { background: none; border: none; color: var(--text-soft); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 2px; position: relative; transition: color 0.25s ease; }
+  .nav-links button::after { content: ""; position: absolute; bottom: 0; left: 0; width: 0%; height: 1px; background: var(--brass); transition: width 0.3s ease; }
+  .nav-links button:hover { color: var(--text); }
+  .nav-links button.active { color: var(--brass-light); }
+  .nav-links button.active::after { width: 100%; }
+  .edit-toggle { border: 1px solid var(--border); background: none; color: var(--text-muted); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 7px 14px; transition: all 0.2s ease; }
+  .edit-toggle:hover { border-color: var(--brass); color: var(--text-soft); }
+  .edit-toggle.on { border-color: var(--brass); color: var(--brass-light); background: rgba(176,137,74,0.1); }
+  .nav-toggle { display: none; background: none; border: none; color: var(--text); font-size: 22px; }
+
+  @media (max-width: 820px) {
+    .nav-links { position: fixed; top: 62px; right: 0; left: 0; background: var(--bg); border-bottom: 1px solid var(--border-soft); flex-direction: column; gap: 0; max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .nav-links.open { max-height: 360px; }
+    .nav-links button { width: 100%; text-align: left; padding: 16px 32px; border-bottom: 1px solid var(--border-soft); }
+    .nav-toggle { display: block; }
+    .edit-toggle { font-size: 10px; padding: 6px 10px; }
+  }
+
+  /* ---------- Edit mode banner ---------- */
+  .edit-banner { display: none; background: rgba(176,137,74,0.12); border-bottom: 1px solid var(--brass); color: var(--brass-light); font-size: 12.5px; text-align: center; padding: 9px; letter-spacing: 0.5px; }
+  .edit-banner.show { display: block; }
+
+  /* ---------- Login panel ---------- */
+  .login-panel { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+  .login-panel.show { display: flex; }
+  .login-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; width: 320px; max-width: 90vw; }
+  .login-box h3 { font-family: var(--serif-display); font-size: 16px; letter-spacing: 1px; text-transform: uppercase; color: var(--text); margin-bottom: 18px; }
+  .login-box input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 11px 12px; font-size: 14px; font-family: var(--sans); margin-bottom: 12px; }
+  .login-box input:focus { outline: none; border-color: var(--brass); }
+  .login-actions { display: flex; gap: 10px; margin-top: 6px; }
+  .login-submit { flex: 1; background: var(--brass); color: #17171a; border: none; padding: 11px 0; font-size: 12.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+  .login-submit:hover { background: var(--brass-light); }
+  .login-cancel { background: none; border: 1px solid var(--border); color: var(--text-muted); padding: 11px 16px; font-size: 12.5px; letter-spacing: 1px; text-transform: uppercase; }
+  .login-cancel:hover { border-color: var(--text-muted); color: var(--text-soft); }
+  .login-error { margin-top: 12px; font-size: 12.5px; color: #d97757; min-height: 16px; }
+
+  /* ---------- Page shell ---------- */
+  .page { display: none; min-height: 100vh; padding-top: 62px; }
+  .page.active { display: block; animation: fadein 0.5s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  .tc-strip { height: 1px; margin: 56px 0; background-image: repeating-linear-gradient(to right, var(--brass) 0px, var(--brass) 4px, transparent 4px, transparent 12px); opacity: 0.55; }
+  .eyebrow { font-family: var(--serif-display); font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: var(--brass); margin-bottom: 18px; }
+
+  /* ---------- Home ---------- */
+  .hero { min-height: calc(100vh - 62px); display: flex; flex-direction: column; justify-content: center; position: relative; background: radial-gradient(ellipse 900px 500px at 80% 10%, rgba(176,137,74,0.10), transparent 60%), radial-gradient(ellipse 700px 500px at 10% 90%, rgba(176,137,74,0.06), transparent 60%); }
+  .hero-loc { position: absolute; top: 40px; right: 32px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--brass); text-align: right; line-height: 1.7; }
+  .hero-name { font-family: var(--serif-display); font-weight: 700; font-size: clamp(56px, 11vw, 128px); line-height: 0.95; letter-spacing: -1px; text-transform: uppercase; color: var(--text); }
+  .hero-tagline { margin-top: 22px; font-size: clamp(14px, 2vw, 18px); letter-spacing: 1.5px; text-transform: uppercase; color: var(--brass-light); max-width: 720px; }
+  .hero-intro { margin-top: 28px; max-width: 540px; color: var(--text-soft); font-size: 16px; font-weight: 300; }
+  .hero-actions { margin-top: 48px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .hero-card { border: 1px solid var(--border); background: var(--surface); padding: 18px 26px; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-soft); transition: all 0.25s ease; }
+  .hero-card:hover { border-color: var(--brass); color: var(--text); transform: translateY(-2px); }
+  .scroll-cue { position: absolute; bottom: 36px; left: 32px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); display: flex; align-items: center; gap: 10px; }
+  .scroll-cue .line { width: 28px; height: 1px; background: var(--text-muted); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  h2.section-title { font-family: var(--serif-display); font-size: 30px; font-weight: 600; letter-spacing: 0.5px; color: var(--text); margin-bottom: 8px; }
+  h2.section-title.small { font-size: 22px; }
+  .section-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 8px; }
+  section.block { padding: 90px 0; }
+  section.block:first-of-type { padding-top: 120px; }
+  .profile-text { font-size: 19px; line-height: 1.85; color: var(--text-soft); font-weight: 300; max-width: 680px; }
+
+  .section-head-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  /* ---------- Skills / Experience ---------- */
+  .two-col { display: grid; grid-template-columns: 1fr 1.3fr; gap: 64px; margin-top: 40px; }
+  @media (max-width: 760px) { .two-col { grid-template-columns: 1fr; gap: 40px; } }
+  .skills-list { list-style: none; }
+  .skills-list li { padding: 13px 0; border-bottom: 1px solid var(--border-soft); color: var(--text-soft); font-size: 15px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .skills-list li .sk-name::before { content: "• "; color: var(--brass); }
+  .exp-item { padding: 18px 0; border-bottom: 1px solid var(--border-soft); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .exp-item:first-child { padding-top: 0; }
+  .exp-role { font-size: 16px; font-weight: 600; color: var(--text); }
+  .exp-meta { font-size: 13.5px; color: var(--text-muted); margin-top: 3px; }
+  .item-del { background: none; border: none; color: var(--text-muted); font-size: 15px; opacity: 0.6; flex-shrink: 0; }
+  .item-del:hover { color: #c65b4a; opacity: 1; }
+  .add-row-btn { margin-top: 16px; background: none; border: 1px dashed var(--border); color: var(--text-muted); font-size: 12.5px; letter-spacing: 0.5px; text-transform: uppercase; padding: 10px 16px; width: 100%; text-align: left; }
+  .add-row-btn:hover { border-color: var(--brass); color: var(--brass-light); }
+
+  /* ---------- Pill / company rows ---------- */
+  .companies-row { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 0; font-size: 15px; letter-spacing: 0.5px; color: var(--text-soft); }
+  .companies-row .pill { display: inline-flex; align-items: center; gap: 6px; }
+  .companies-row .pill a:hover { color: var(--brass-light); text-decoration: underline; }
+  .companies-row .pill.has-link a { color: var(--text); }
+  .companies-row .sep { color: var(--brass); margin: 0 14px; }
+  .pill-edit { background: none; border: none; color: var(--text-muted); font-size: 11px; opacity: 0.7; }
+  .pill-edit:hover { color: var(--brass-light); opacity: 1; }
+  .pill-del { background: none; border: none; color: var(--text-muted); font-size: 12px; opacity: 0.6; }
+  .pill-del:hover { color: #c65b4a; opacity: 1; }
+  .add-pill-btn { background: none; border: 1px dashed var(--border); color: var(--text-muted); font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; padding: 6px 12px; margin-left: 6px; }
+  .add-pill-btn:hover { border-color: var(--brass); color: var(--brass-light); }
+
+  /* ---------- Services ---------- */
+  .services-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 28px; }
+  .service-tag { border: 1px solid var(--border); background: var(--surface); padding: 22px 20px; text-align: center; font-family: var(--serif-display); font-size: 16px; letter-spacing: 1px; text-transform: uppercase; color: var(--text); transition: border-color 0.25s ease, transform 0.25s ease; }
+  .service-tag:hover { border-color: var(--brass); transform: translateY(-2px); }
+
+  /* ---------- Work page / film cards ---------- */
+  .film-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; }
+  .film-card { background: var(--surface); border: 1px solid var(--border); padding: 22px 22px 20px; position: relative; transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease; }
+  .film-card .fc-year { font-size: 12px; color: var(--text-muted); letter-spacing: 1px; }
+  .film-card .fc-title { font-family: var(--serif-display); font-size: 19px; font-weight: 500; color: var(--text); margin-top: 6px; }
+  .film-card .fc-role { font-size: 13px; color: var(--brass-light); letter-spacing: 0.5px; margin-top: 10px; text-transform: uppercase; }
+  .film-card.linked { cursor: pointer; }
+  .film-card.linked:hover { border-color: var(--brass); background: var(--surface-2); transform: translateY(-3px); }
+  .film-card.linked .fc-view { position: absolute; top: 20px; right: 20px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--brass); opacity: 0; transition: opacity 0.25s ease; }
+  .film-card.linked:hover .fc-view { opacity: 1; }
+  .fc-edit-row { margin-top: 14px; display: flex; gap: 8px; }
+  .fc-edit-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 12.5px; padding: 8px 10px; }
+  .fc-edit-row input:focus { outline: none; border-color: var(--brass); }
+  .fc-edit-row button { background: var(--brass); color: #17171a; border: none; font-size: 12px; font-weight: 600; padding: 8px 14px; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+  .fc-edit-row button:hover { background: var(--brass-light); }
+  .fc-link-toggle { margin-top: 12px; font-size: 11.5px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); background: none; border: none; padding: 0; }
+  .fc-link-toggle:hover { color: var(--brass-light); }
+  .fc-linked-url { margin-top: 10px; font-size: 12px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .fc-linked-url span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fc-linked-url button { background: none; border: none; color: var(--text-muted); font-size: 11px; text-decoration: underline; flex-shrink: 0; }
+  .fc-linked-url button:hover { color: var(--brass-light); }
+  .fc-admin-row { margin-top: 14px; display: flex; justify-content: flex-end; }
+  .film-card-new { border: 1px dashed var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; min-height: 130px; background: none; }
+  .film-card-new:hover { border-color: var(--brass); color: var(--brass-light); }
+
+  .demo-note { margin-top: 40px; padding: 16px 20px; border: 1px dashed var(--border); background: var(--surface); font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+  .demo-note strong { color: var(--text-soft); }
+
+  /* ---------- Rates page ---------- */
+  .rate-table { width: 100%; border-collapse: collapse; margin-top: 28px; }
+  .rate-table th { text-align: left; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--brass); padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .rate-table td { padding: 16px 10px 16px 0; border-bottom: 1px solid var(--border-soft); font-size: 15px; vertical-align: middle; }
+  .rate-table td.rt-price { color: var(--brass-light); font-weight: 600; white-space: nowrap; }
+  .rate-table td.rt-qty { width: 90px; }
+  .rate-table td.rt-qty input { width: 64px; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 7px 8px; font-size: 14px; text-align: center; }
+  .rate-table td.rt-qty input:focus { outline: none; border-color: var(--brass); }
+  .rate-table td.rt-check { width: 36px; }
+  .rate-table input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--brass); }
+
+  .budget-summary { margin-top: 28px; border: 1px solid var(--border); background: var(--surface); padding: 26px; }
+  .budget-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; color: var(--text-soft); border-bottom: 1px solid var(--border-soft); }
+  .budget-total { display: flex; justify-content: space-between; padding: 16px 0 0; font-size: 20px; color: var(--text); font-weight: 600; }
+  .budget-total span:last-child { color: var(--brass-light); font-family: var(--serif-display); }
+
+  .quote-form { margin-top: 26px; display: grid; gap: 14px; max-width: 480px; }
+  .quote-form label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 6px; }
+  .quote-form input, .quote-form textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; font-size: 14px; font-family: var(--sans); }
+  .quote-form input:focus, .quote-form textarea:focus { outline: none; border-color: var(--brass); }
+  .quote-form textarea { min-height: 90px; resize: vertical; }
+  .send-btn { margin-top: 8px; background: var(--brass); color: #17171a; border: none; padding: 15px 30px; font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; align-self: start; }
+  .send-btn:hover { background: var(--brass-light); }
+  .rate-admin-row { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ---------- Package cards ---------- */
+  .pkg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 28px; }
+  .pkg-card { background: var(--surface); border: 1px solid var(--border); padding: 26px 24px; display: flex; flex-direction: column; transition: border-color 0.25s ease, transform 0.25s ease; }
+  .pkg-card:hover { border-color: var(--brass); transform: translateY(-3px); }
+  .pkg-name { font-family: var(--serif-display); font-size: 19px; font-weight: 600; color: var(--text); }
+  .pkg-price { margin-top: 10px; font-size: 26px; color: var(--brass-light); font-weight: 600; }
+  .pkg-price span { font-size: 12px; color: var(--text-muted); font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; margin-left: 4px; }
+  .pkg-includes { margin-top: 14px; list-style: none; flex: 1; }
+  .pkg-includes li { font-size: 13.5px; color: var(--text-soft); padding: 5px 0; }
+  .pkg-includes li::before { content: "• "; color: var(--brass); }
+  .pkg-btn { margin-top: 18px; background: none; border: 1px solid var(--brass); color: var(--brass-light); padding: 11px 0; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; width: 100%; }
+  .pkg-btn:hover { background: var(--brass); color: #17171a; }
+  .pkg-admin-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+  .pkg-card-new { border: 1px dashed var(--border); align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; min-height: 180px; background: none; cursor: pointer; }
+  .pkg-card-new:hover { border-color: var(--brass); color: var(--brass-light); }
+
+  /* ---------- Custom invoice ---------- */
+  .divider-label { display: flex; align-items: center; gap: 16px; margin: 60px 0 30px; color: var(--text-muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+  .divider-label::before, .divider-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+  .custom-box { border: 1px solid var(--border); background: var(--surface); padding: 30px; }
+  .custom-box p { color: var(--text-soft); font-size: 15px; max-width: 560px; margin-bottom: 4px; }
+
+  /* ---------- Contact ---------- */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 40px; }
+  @media (max-width: 760px) { .contact-grid { grid-template-columns: 1fr; gap: 40px; } }
+  .contact-list { list-style: none; }
+  .contact-list li { padding: 20px 0; border-bottom: 1px solid var(--border-soft); }
+  .contact-list .cl-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .contact-list .cl-value { font-size: 18px; color: var(--text); transition: color 0.2s ease; }
+  .contact-list a:hover .cl-value { color: var(--brass-light); }
+  .pdf-btn { display: inline-block; margin-top: 28px; padding: 16px 30px; border: 1px solid var(--brass); color: var(--brass-light); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; transition: all 0.25s ease; background: none; }
+  .pdf-btn:hover { background: var(--brass); color: #17171a; }
+  .video-box { border: 1px solid var(--border); background: var(--surface); padding: 26px; }
+  .video-box h3 { font-family: var(--serif-display); font-size: 15px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-soft); margin-bottom: 16px; }
+  .video-frame-wrap { position: relative; width: 100%; padding-top: 56.25%; background: #0e0e10; border: 1px solid var(--brass); margin-top: 14px; display: none; }
+  .video-frame-wrap.show { display: block; }
+  .video-frame-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+  .video-input-row { display: flex; gap: 8px; margin-top: 4px; }
+  .video-input-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 13px; padding: 10px 12px; }
+  .video-input-row input:focus { outline: none; border-color: var(--brass); }
+  .video-input-row button { background: var(--brass); color: #17171a; border: none; font-size: 12px; font-weight: 600; padding: 0 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .video-input-row button:hover { background: var(--brass-light); }
+  .video-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 10px; }
+
+  footer { border-top: 1px solid var(--border-soft); padding: 50px 0 40px; margin-top: 40px; }
+  .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-inner img { height: 40px; width: auto; opacity: 0.9; }
+  .footer-links { display: flex; gap: 28px; font-size: 12.5px; color: var(--text-muted); letter-spacing: 0.5px; flex-wrap: wrap; }
+  .footer-links a:hover { color: var(--brass-light); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <button class="nav-brand" onclick="goTo('home')" aria-label="Home">
+    <img src="assets/pendragon-p-mark.png" alt="Pendragon P mark">
+    <span>Pendragon</span>
+  </button>
+  <div class="nav-right">
+    <ul class="nav-links" id="navLinks">
+      <li><button data-page="home" class="active" onclick="goTo('home')">Home</button></li>
+      <li><button data-page="about" onclick="goTo('about')">About</button></li>
+      <li><button data-page="work" onclick="goTo('work')">Work</button></li>
+      <li><button data-page="rates" onclick="goTo('rates')">Rates</button></li>
+      <li><button data-page="contact" onclick="goTo('contact')">Contact</button></li>
+    </ul>
+    <button class="edit-toggle" id="editToggleBtn" onclick="handleEditToggleClick()">Log In</button>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="edit-banner" id="editBanner">Edit Mode is on: add, edit, or remove content across the site. Log out before sharing with clients.</div>
+
+<div class="login-panel" id="loginPanel">
+  <div class="login-box">
+    <h3>Admin Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <div class="login-actions">
+      <button class="login-submit" onclick="doLogin()">Log In</button>
+      <button class="login-cancel" onclick="closeLoginPanel()">Cancel</button>
+    </div>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ================= HOME ================= -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-loc">Windhoek<br>Namibia</div>
+    <div class="wrap">
+      <h1 class="hero-name">Steven<br>Pendragon</h1>
+      <p class="hero-tagline">Cinematographer · Director of Photography · Senior Editor · Videographer · Gaffer</p>
+      <p class="hero-intro">Namibian filmmaker and cinematographer working across narrative film, television, and commercial production, from camera and lighting through post and direction of photography.</p>
+      <div class="hero-actions">
+        <button class="hero-card" onclick="goTo('about')">About Steven</button>
+        <button class="hero-card" onclick="goTo('work')">See the Work</button>
+        <button class="hero-card" onclick="goTo('rates')">Get a Quote</button>
+        <button class="hero-card" onclick="goTo('contact')">Get in Touch</button>
+      </div>
+    </div>
+    <div class="scroll-cue"><span class="line"></span> Scroll</div>
+  </section>
+</div>
+
+<!-- ================= ABOUT ================= -->
+<div class="page" id="page-about">
+  <div class="wrap">
+    <section class="block" style="padding-top:120px;">
+      <div class="eyebrow">About</div>
+      <h2 class="section-title">Professional Profile</h2>
+      <p class="profile-text">I am a passionate Namibian filmmaker and cinematographer with professional experience in film production, commercial television, editing, and visual storytelling. I have worked across narrative films, television, and commercial productions in roles ranging from camera operation and lighting to post-production and directing of photography.</p>
+
+      <div class="tc-strip"></div>
+
+      <div class="two-col">
+        <div>
+          <div class="section-head-row"><h2 class="section-title small">Core Skills</h2></div>
+          <ul class="skills-list" id="skillsList"></ul>
+          <button class="add-row-btn edit-only" onclick="addSkill()">+ Add skill</button>
+        </div>
+        <div>
+          <div class="section-head-row"><h2 class="section-title small">Professional Experience</h2></div>
+          <div id="expList"></div>
+          <button class="add-row-btn edit-only" onclick="addExperience()">+ Add experience</button>
+        </div>
+      </div>
+
+      <div class="tc-strip"></div>
+
+      <div class="section-head-row">
+        <h2 class="section-title small">Notable Companies Collaborated With</h2>
+      </div>
+      <div class="companies-row" id="companiesRow"></div>
+
+      <div class="tc-strip"></div>
+
+      <div class="section-head-row">
+        <h2 class="section-title small">Teaching &amp; Workshops</h2>
+      </div>
+      <p class="section-sub" style="max-width:620px;">Available for hire for film workshops and teaching, in addition to production work.</p>
+      <div id="teachingList"></div>
+      <button class="add-row-btn edit-only" onclick="addTeaching()">+ Add teaching credit</button>
+    </section>
+  </div>
+</div>
+
+<!-- ================= WORK ================= -->
+<div class="page" id="page-work">
+  <div class="wrap">
+    <section class="block" style="padding-top:120px;">
+      <div class="eyebrow">Work</div>
+      <h2 class="section-title">Available For Hire As</h2>
+      <div class="services-row">
+        <div class="service-tag">Director of Photography</div>
+        <div class="service-tag">Camera Operator</div>
+        <div class="service-tag">Gaffer</div>
+        <div class="service-tag">Editor</div>
+      </div>
+
+      <div class="tc-strip"></div>
+
+      <h2 class="section-title">Selected Filmography</h2>
+      <p class="section-sub">Click a card to view the project. Links are added per production below.</p>
+      <div class="film-grid" id="filmGrid"></div>
+
+      <div class="demo-note">
+        <strong>Preview mode:</strong> everything you add here (project links, new productions, companies) saves in this browser so you can see exactly how it behaves. When this goes live on a real host, the same add/edit actions need a backend to save for every visitor (see note at the end of chat).
+      </div>
+
+      <div class="tc-strip"></div>
+
+      <div class="section-head-row"><h2 class="section-title small">Commercial &amp; Corporate Production</h2></div>
+      <div class="companies-row" id="commercialRow"></div>
+
+      <div class="tc-strip"></div>
+
+      <div class="section-head-row"><h2 class="section-title small">Notable Events Covered &amp; Recurring Clients</h2></div>
+      <div class="companies-row" id="eventsRow"></div>
+
+      <div class="tc-strip"></div>
+
+      <div class="section-head-row"><h2 class="section-title small">Notable Clients</h2></div>
+      <div class="companies-row" id="clientsRow"></div>
+    </section>
+  </div>
+</div>
+
+<!-- ================= RATES ================= -->
+<div class="page" id="page-rates">
+  <div class="wrap">
+    <section class="block" style="padding-top:120px;">
+      <div class="eyebrow">Rates</div>
+      <h2 class="section-title">Get a Quote</h2>
+      <p class="profile-text" style="font-size:16px;">Pick a package for a straightforward once-off day rate, build a custom budget from individual services, or request a bespoke invoice for anything more involved.</p>
+
+      <div class="tc-strip"></div>
+
+      <div class="section-head-row"><h2 class="section-title small">Packages: Once Off Day Rates</h2></div>
+      <p class="section-sub">Flat rates for common shoot sizes. Request one and it drops straight into the form below.</p>
+      <div class="pkg-grid" id="pkgGrid"></div>
+
+      <div class="tc-strip"></div>
+
+      <div class="section-head-row"><h2 class="section-title small">Build a Custom Budget</h2></div>
+      <p class="section-sub">Select individual services and quantities for a project that doesn't fit a package.</p>
+      <table class="rate-table">
+        <thead><tr><th></th><th>Service</th><th>Rate</th><th>Qty</th><th></th></tr></thead>
+        <tbody id="rateTableBody"></tbody>
+      </table>
+      <div class="rate-admin-row edit-only">
+        <button class="add-row-btn" style="width:auto;" onclick="addRate()">+ Add rate item</button>
+      </div>
+
+      <div class="budget-summary">
+        <div id="budgetLines"><div class="budget-line"><span>Select services above to build your budget</span><span></span></div></div>
+        <div class="budget-total"><span>Estimated Total</span><span id="budgetTotal">N$0</span></div>
+      </div>
+
+      <div class="quote-form">
+        <div>
+          <label>Project Name</label>
+          <input type="text" id="qfProject" placeholder="e.g. Wedding Film, Windhoek">
+        </div>
+        <div>
+          <label>Your Name</label>
+          <input type="text" id="qfName" placeholder="Your full name">
+        </div>
+        <div>
+          <label>Your Email</label>
+          <input type="email" id="qfEmail" placeholder="you@email.com">
+        </div>
+        <div>
+          <label>Project Details</label>
+          <textarea id="qfDetails" placeholder="Date, location, what you need covered…"></textarea>
+        </div>
+        <button class="send-btn" onclick="sendBudget(this)">Send Budget Request</button>
+        <p class="video-hint">This opens your email app with the budget pre-filled, addressed to Steven. Hit send from there.</p>
+      </div>
+
+      <div class="divider-label">or</div>
+
+      <div class="custom-box">
+        <h2 class="section-title small">Request a Custom Invoice</h2>
+        <p>Bigger production, multi-day event, or something that doesn't map to a standard rate? Describe it and Steven will put together a proper invoice and send it back to you directly.</p>
+        <div class="quote-form" style="margin-top:22px;">
+          <div>
+            <label>Your Name</label>
+            <input type="text" id="cfName" placeholder="Your full name">
+          </div>
+          <div>
+            <label>Your Email</label>
+            <input type="email" id="cfEmail" placeholder="you@email.com">
+          </div>
+          <div>
+            <label>Company / Organisation (optional)</label>
+            <input type="text" id="cfCompany" placeholder="If applicable">
+          </div>
+          <div>
+            <label>Tell us about the project</label>
+            <textarea id="cfDetails" placeholder="Scope, dates, locations, deliverables, timeline, budget range if you have one…"></textarea>
+          </div>
+          <button class="send-btn" onclick="sendCustomRequest(this)">Request Custom Invoice</button>
+          <p class="video-hint">Opens your email app addressed to Steven. He'll follow up with a tailored invoice.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ================= CONTACT ================= -->
+<div class="page" id="page-contact">
+  <div class="wrap">
+    <section class="block" style="padding-top:120px;">
+      <div class="eyebrow">Contact</div>
+      <h2 class="section-title">Let's Work Together</h2>
+      <p class="profile-text" style="font-size:16px;">For commissions, commercial work, or collaboration enquiries, reach out directly.</p>
+
+      <div class="contact-grid">
+        <div>
+          <ul class="contact-list">
+            <li><a href="mailto:stevenpendragon97@gmail.com"><div class="cl-label">Email</div><div class="cl-value">stevenpendragon97@gmail.com</div></a></li>
+            <li><a href="https://instagram.com/stevenpendragon" target="_blank" rel="noopener"><div class="cl-label">Instagram</div><div class="cl-value">@stevenpendragon</div></a></li>
+            <li><a href="https://www.youtube.com/@stevenpendragon" target="_blank" rel="noopener"><div class="cl-label">YouTube</div><div class="cl-value">youtube.com/@stevenpendragon</div></a></li>
+          </ul>
+          <button class="pdf-btn" onclick="alert('Wire this button to your hosted PDF file link once the site is live, e.g. /assets/pendragon_bio.pdf')">Download Bio (PDF)</button>
+        </div>
+        <div class="video-box">
+          <h3>Behind the Scenes</h3>
+          <div class="video-input-row">
+            <input type="text" id="videoUrlInput" placeholder="Paste a YouTube or Vimeo link…">
+            <button onclick="setVideo()">Embed</button>
+          </div>
+          <div class="video-hint">Paste a link and it renders below, same as how it'll work live.</div>
+          <div class="video-frame-wrap" id="videoFrameWrap"><iframe id="videoFrame" src="" allowfullscreen></iframe></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap footer-inner">
+    <img src="assets/pendragon-p-mark.png" alt="Pendragon P mark">
+    <div class="footer-links">
+      <a href="mailto:stevenpendragon97@gmail.com">stevenpendragon97@gmail.com</a>
+      <a href="https://instagram.com/stevenpendragon" target="_blank" rel="noopener">Instagram: @stevenpendragon</a>
+      <a href="https://www.youtube.com/@stevenpendragon" target="_blank" rel="noopener">YouTube</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ================= Navigation =================
+  function goTo(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.nav-links button').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+    document.getElementById('navLinks').classList.remove('open');
+    window.scrollTo(0, 0);
+  }
+  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+
+  // ================= Supabase =================
+  const SUPABASE_URL = 'https://svbasaqznniefsjjpngo.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_KOYJ6AoymEghhf63Qb08PQ_iVy5hiIW';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let EDIT_MODE = false;
+
+  function openLoginPanel() {
+    document.getElementById('loginError').textContent = '';
+    document.getElementById('loginPanel').classList.add('show');
+  }
+  function closeLoginPanel() {
+    document.getElementById('loginPanel').classList.remove('show');
+  }
+  async function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) { document.getElementById('loginError').textContent = 'Enter your email and password.'; return; }
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) { document.getElementById('loginError').textContent = error.message; return; }
+    closeLoginPanel();
+    await applyAuthState();
+  }
+  async function doLogout() {
+    await sb.auth.signOut();
+    await applyAuthState();
+  }
+  function handleEditToggleClick() {
+    if (EDIT_MODE) { doLogout(); } else { openLoginPanel(); }
+  }
+  async function applyAuthState() {
+    const { data } = await sb.auth.getSession();
+    EDIT_MODE = !!data.session;
+    document.getElementById('editToggleBtn').textContent = EDIT_MODE ? 'Log Out' : 'Log In';
+    document.getElementById('editToggleBtn').classList.toggle('on', EDIT_MODE);
+    document.getElementById('editBanner').classList.toggle('show', EDIT_MODE);
+    document.querySelectorAll('.edit-only').forEach(el => el.style.display = EDIT_MODE ? '' : 'none');
+    renderAll();
+  }
+
+  // ================= Generic storage helpers (Supabase) =================
+  async function loadList(key, defaults) {
+    const { data, error } = await sb.from('site_content').select('value').eq('key', key).maybeSingle();
+    if (error) { console.error(error); return defaults; }
+    if (data && data.value !== null && data.value !== undefined) return data.value;
+    await sb.from('site_content').upsert({ key, value: defaults }, { onConflict: 'key' });
+    return defaults;
+  }
+  async function saveList(key, arr) {
+    const { error } = await sb.from('site_content').upsert({ key, value: arr }, { onConflict: 'key' });
+    if (error) alert('Could not save: ' + error.message);
+  }
+  function normalizeUrl(url) {
+    url = (url || '').trim();
+    if (!url) return '';
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    return url;
+  }
+
+  // ================= Defaults =================
+  const DEFAULT_FILMS = [
+    { id: 'blackened', title: 'Blackened', year: 2022, role: 'Assistant Camera', url: '' },
+    { id: 'ataman', title: 'Ataman', year: 2024, role: 'Best Boy', url: '' },
+    { id: 'tsek', title: 'Tsek', year: 2024, role: 'Gaffer & Grips', url: '' },
+    { id: 'okuruwo', title: 'Okuruwo', year: 2026, role: 'Gaffer', url: '' },
+    { id: 'cowardice', title: 'Cowardice of Love', year: 2026, role: 'Gaffer', url: '' },
+    { id: 'b2passage', title: 'The B2 Passage', year: 2025, role: 'Director of Photography', url: '' },
+    { id: 'gazza-doc', title: "Gazza: I'll Mutale (BTS Documentary)", year: 2025, role: 'Director of Photography', url: '' },
+    { id: 'latoya-doc', title: 'Latoya Stella: Moto (BTS Documentary)', year: 2026, role: 'Director of Photography', url: '' },
+    { id: 'topcheri-doc', title: 'Top Cheri & PequenoGang: Call You Later (BTS Documentary)', year: 2026, role: 'Director of Photography', url: '' }
+  ];
+  const DEFAULT_SKILLS = ['Cinematography & Camera Operation','Director of Photography','Film & Television Production','Lighting & Gaffer Work','Video Editing & Post-Production','Adobe Premiere Pro','DaVinci Resolve','Commercial Production','Visual Storytelling','Creative Direction'];
+  const DEFAULT_EXPERIENCE = [
+    { role: 'Senior Editor', company: 'Namibia Broadcasting Corporation (NBC)', years: '2025 to Present' },
+    { role: 'Film Production Intern', company: 'Namibia Broadcasting Corporation (NBC)', years: '2021 to 2022' },
+    { role: 'Videographer', company: 'Npapunikwa Films', years: '2023' },
+    { role: 'Video Production Assistant', company: 'Epacha Game Lodge', years: '2022' },
+    { role: 'Social Media Intern', company: 'Onguma Safari Camp', years: '2022' }
+  ];
+  const DEFAULT_TEACHING = [
+    { role: 'Film Workshops, 1st, 2nd and 3rd Year Students', company: 'The College of the Arts, Katutura', years: '2026' },
+    { role: 'Film Theory, Editing and Cinematography', company: 'Namibia Film School', years: '2022' }
+  ];
+  const DEFAULT_COMPANIES = ['Inchiology Studios','VisionHaus','Reloaded Films','Dark Crown Productions','Tukaleni Films','NBC'].map(n => ({ name: n, url: '' }));
+  const DEFAULT_COMMERCIAL = ['FNB','Paratus','MTC','Express Credit','Bank of Namibia','RMB','O&L'].map(n => ({ name: n, url: '' }));
+  const DEFAULT_EVENTS = ['Amis Day','Deep In The City','PassionFruit','Strictly Soul','RedBull Dance Your Style','Knorr','Bar HP','Sound Of Summer'].map(n => ({ name: n, url: '' }));
+  const DEFAULT_CLIENTS = ['DJ Dreas','PequenoGang','Latoya Stella','Gazza','Top Cheri'].map(n => ({ name: n, url: '' }));
+  const DEFAULT_RATES = [
+    { service: 'Director of Photography (Day Rate)', unit: 'per day', price: 3500 },
+    { service: 'Camera Operator', unit: 'per day', price: 2200 },
+    { service: 'Gaffer / Lighting', unit: 'per day', price: 1800 },
+    { service: 'Video Editing', unit: 'per hour', price: 350 },
+    { service: 'BTS Documentary Package', unit: 'per project', price: 6500 }
+  ];
+  const DEFAULT_PACKAGES = [
+    { id: 'pkg-half', name: 'Half Day Shoot', price: 2800, unit: 'once off', includes: ['DOP + Camera Operator', 'Up to 4 hours on location', 'Basic lighting setup', 'Raw footage handover'] },
+    { id: 'pkg-full', name: 'Full Day Shoot', price: 5200, unit: 'once off', includes: ['DOP + Camera + Gaffer', 'Up to 8 hours on location', 'Full lighting kit', 'Basic edit pass included'] },
+    { id: 'pkg-multi', name: 'Multi Day Production', price: 4800, unit: 'once off / day', includes: ['Full crew, per shoot day', 'Multi-day rate', 'Dedicated edit turnaround', 'Ideal for events & campaigns'] }
+  ];
+
+  let films = [], skills = [], experience = [], teaching = [], companies = [], commercial = [], events = [], clients = [], rates = [], packages = [];
+  let selectedPackage = null;
+
+  // ================= Films =================
+  function filmCardHTML(f) {
+    const hasLink = !!f.url;
+    const delBtn = EDIT_MODE ? `<button class="item-del" onclick="event.stopPropagation(); deleteFilm('${f.id}')" title="Remove">×</button>` : '';
+    let linkArea = '';
+    if (EDIT_MODE) {
+      if (hasLink) {
+        linkArea = `<div class="fc-linked-url" onclick="event.stopPropagation()"><span>${f.url.replace(/^https?:\/\//,'')}</span><button onclick="editFilmLink(event,'${f.id}')">edit</button></div>`;
+      } else {
+        linkArea = `<button class="fc-link-toggle" onclick="event.stopPropagation(); showFilmEdit('${f.id}')">+ add project link</button>
+        <div class="fc-edit-row" id="edit-${f.id}" style="display:none;" onclick="event.stopPropagation()">
+          <input type="text" id="input-${f.id}" placeholder="Paste video or project URL…">
+          <button onclick="saveFilmLink('${f.id}')">Save</button>
+        </div>`;
+      }
+    }
+    return `<div class="film-card ${hasLink ? 'linked' : ''}" id="card-${f.id}" ${hasLink ? `onclick="openProject(event, '${f.id}')"` : ''}>
+        ${hasLink ? '<div class="fc-view">↗ view project</div>' : ''}
+        <div class="fc-year">${f.year}</div>
+        <div class="fc-title">${f.title}</div>
+        <div class="fc-role">${f.role}</div>
+        ${linkArea}
+        ${EDIT_MODE ? `<div class="fc-admin-row">${delBtn}</div>` : ''}
+      </div>`;
+  }
+  function renderFilms() {
+    const grid = document.getElementById('filmGrid');
+    grid.innerHTML = films.map(filmCardHTML).join('') + (EDIT_MODE ? `<button class="film-card film-card-new" onclick="addFilm()">+ Add Project</button>` : '');
+  }
+  function showFilmEdit(id) { document.getElementById('edit-' + id).style.display = 'flex'; }
+  function editFilmLink(e, id) {
+    e.stopPropagation();
+    const f = films.find(x => x.id === id); f.url = '';
+    renderFilms(); setTimeout(() => showFilmEdit(id), 0);
+  }
+  async function saveFilmLink(id) {
+    const input = document.getElementById('input-' + id);
+    const url = normalizeUrl(input.value);
+    if (!url) return;
+    films.find(x => x.id === id).url = url;
+    await saveList('films', films);
+    renderFilms();
+  }
+  function openProject(e, id) {
+    if (e.target.closest('.fc-linked-url') || e.target.closest('.fc-admin-row')) return;
+    const f = films.find(x => x.id === id);
+    if (f && f.url) window.open(f.url, '_blank', 'noopener');
+  }
+  async function addFilm() {
+    const title = prompt('Project title:'); if (!title) return;
+    const year = prompt('Year:', new Date().getFullYear()) || '';
+    const role = prompt('Your role:', 'Director of Photography') || '';
+    const id = 'p' + Date.now();
+    films.push({ id, title, year, role, url: '' });
+    await saveList('films', films);
+    renderFilms();
+  }
+  async function deleteFilm(id) {
+    if (!confirm('Remove this project?')) return;
+    films = films.filter(x => x.id !== id);
+    await saveList('films', films);
+    renderFilms();
+  }
+
+  // ================= Skills =================
+  function renderSkills() {
+    const list = document.getElementById('skillsList');
+    list.innerHTML = skills.map((s, i) => `<li><span class="sk-name">${s}</span>${EDIT_MODE ? `<button class="item-del" onclick="deleteSkill(${i})">×</button>` : ''}</li>`).join('');
+  }
+  async function addSkill() {
+    const s = prompt('New skill:'); if (!s) return;
+    skills.push(s); await saveList('skills', skills); renderSkills();
+  }
+  async function deleteSkill(i) {
+    skills.splice(i, 1); await saveList('skills', skills); renderSkills();
+  }
+
+  // ================= Experience =================
+  function renderExperience() {
+    const list = document.getElementById('expList');
+    list.innerHTML = experience.map((e, i) => `
+      <div class="exp-item">
+        <div><div class="exp-role">${e.role}</div><div class="exp-meta">${e.company}, ${e.years}</div></div>
+        ${EDIT_MODE ? `<button class="item-del" onclick="deleteExperience(${i})">×</button>` : ''}
+      </div>`).join('');
+  }
+  async function addExperience() {
+    const role = prompt('Role title:'); if (!role) return;
+    const company = prompt('Company / production:') || '';
+    const years = prompt('Years (e.g. 2024 to Present):') || '';
+    experience.unshift({ role, company, years });
+    await saveList('experience', experience); renderExperience();
+  }
+  async function deleteExperience(i) {
+    experience.splice(i, 1); await saveList('experience', experience); renderExperience();
+  }
+
+  // ================= Teaching & Workshops =================
+  function renderTeaching() {
+    const list = document.getElementById('teachingList');
+    list.innerHTML = teaching.map((t, i) => `
+      <div class="exp-item">
+        <div><div class="exp-role">${t.role}</div><div class="exp-meta">${t.company}, ${t.years}</div></div>
+        ${EDIT_MODE ? `<button class="item-del" onclick="deleteTeaching(${i})">×</button>` : ''}
+      </div>`).join('');
+  }
+  async function addTeaching() {
+    const role = prompt('What did you teach? (e.g. Cinematography Workshop):'); if (!role) return;
+    const company = prompt('Institution:') || '';
+    const years = prompt('Year(s):') || '';
+    teaching.unshift({ role, company, years });
+    await saveList('teaching', teaching); renderTeaching();
+  }
+  async function deleteTeaching(i) {
+    teaching.splice(i, 1); await saveList('teaching', teaching); renderTeaching();
+  }
+
+  // ================= Pill rows (companies / commercial / events / clients) =================
+  function pillRowHTML(arr, key) {
+    const pills = arr.map((item, i) => {
+      const hasLink = !!item.url;
+      const content = hasLink ? `<a href="${item.url}" target="_blank" rel="noopener">${item.name}</a>` : `<span>${item.name}</span>`;
+      const editBtn = EDIT_MODE ? `<button class="pill-edit" onclick="editPillLink('${key}',${i})" title="Add/edit website">🔗</button>` : '';
+      const delBtn = EDIT_MODE ? `<button class="pill-del" onclick="deletePill('${key}',${i})" title="Remove">×</button>` : '';
+      return `<span class="pill ${hasLink ? 'has-link' : ''}">${content}${editBtn}${delBtn}</span>`;
+    });
+    let out = pills.join('<span class="sep">•</span>');
+    if (EDIT_MODE) out += `<button class="add-pill-btn" onclick="addPill('${key}')">+ Add</button>`;
+    return out;
+  }
+  function getArr(key) { return { companies, commercial, events, clients }[key]; }
+  function setArr(key, val) {
+    if (key === 'companies') companies = val;
+    else if (key === 'commercial') commercial = val;
+    else if (key === 'events') events = val;
+    else if (key === 'clients') clients = val;
+  }
+  function rowElId(key) { return { companies: 'companiesRow', commercial: 'commercialRow', events: 'eventsRow', clients: 'clientsRow' }[key]; }
+  function renderPillRow(key) {
+    document.getElementById(rowElId(key)).innerHTML = pillRowHTML(getArr(key), key);
+  }
+  function renderAllPillRows() { ['companies','commercial','events','clients'].forEach(renderPillRow); }
+  async function addPill(key) {
+    const name = prompt('Name:'); if (!name) return;
+    const url = prompt('Website (optional):') || '';
+    const arr = getArr(key);
+    arr.push({ name, url: normalizeUrl(url) });
+    await saveList(key, arr);
+    renderPillRow(key);
+  }
+  async function editPillLink(key, i) {
+    const arr = getArr(key);
+    const url = prompt('Website URL for ' + arr[i].name + ':', arr[i].url || '');
+    if (url === null) return;
+    arr[i].url = normalizeUrl(url);
+    await saveList(key, arr);
+    renderPillRow(key);
+  }
+  async function deletePill(key, i) {
+    const arr = getArr(key);
+    if (!confirm('Remove ' + arr[i].name + '?')) return;
+    arr.splice(i, 1);
+    await saveList(key, arr);
+    renderPillRow(key);
+  }
+
+  // ================= Rates / Budget calculator =================
+  function fmtN(n) { return 'N$' + Number(n).toLocaleString('en-US'); }
+  // ================= Packages =================
+  function packageCardHTML(p) {
+    const isSelected = selectedPackage && selectedPackage.id === p.id;
+    return `<div class="pkg-card" id="pkgcard-${p.id}" style="${isSelected ? 'border-color:var(--brass);' : ''}">
+        <div class="pkg-name">${p.name}</div>
+        <div class="pkg-price">${fmtN(p.price)}<span>${p.unit}</span></div>
+        <ul class="pkg-includes">${p.includes.map(x => `<li>${x}</li>`).join('')}</ul>
+        <button class="pkg-btn" onclick="requestPackage('${p.id}')">${isSelected ? 'Selected ✓' : 'Request This Package'}</button>
+        ${EDIT_MODE ? `<div class="pkg-admin-row"><button class="item-del" onclick="deletePackage('${p.id}')">× Remove</button></div>` : ''}
+      </div>`;
+  }
+  function renderPackages() {
+    const grid = document.getElementById('pkgGrid');
+    grid.innerHTML = packages.map(packageCardHTML).join('') + (EDIT_MODE ? `<button class="pkg-card pkg-card-new" onclick="addPackage()">+ Add Package</button>` : '');
+  }
+  function requestPackage(id) {
+    const p = packages.find(x => x.id === id);
+    if (!p) return;
+    selectedPackage = (selectedPackage && selectedPackage.id === id) ? null : p;
+    renderPackages();
+    updateBudget();
+    const qfProject = document.getElementById('qfProject');
+    const qfDetails = document.getElementById('qfDetails');
+    if (selectedPackage) {
+      if (!qfProject.value) qfProject.value = p.name;
+      if (!qfDetails.value) qfDetails.value = `Package requested: ${p.name} (${fmtN(p.price)}, ${p.unit})\n\n`;
+      document.querySelector('.quote-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+  async function addPackage() {
+    const name = prompt('Package name:'); if (!name) return;
+    const price = parseFloat(prompt('Price in NAD:', '0')) || 0;
+    const unit = prompt('Unit (e.g. once-off, once-off / day):', 'once off') || 'once off';
+    const includesRaw = prompt('What\'s included? Separate items with commas:', '') || '';
+    const includes = includesRaw.split(',').map(s => s.trim()).filter(Boolean);
+    packages.push({ id: 'pkg' + Date.now(), name, price, unit, includes });
+    await saveList('packages', packages);
+    renderPackages();
+  }
+  async function deletePackage(id) {
+    if (!confirm('Remove this package?')) return;
+    packages = packages.filter(p => p.id !== id);
+    if (selectedPackage && selectedPackage.id === id) selectedPackage = null;
+    await saveList('packages', packages);
+    renderPackages();
+    updateBudget();
+  }
+
+  function renderRates() {
+    const body = document.getElementById('rateTableBody');
+    body.innerHTML = rates.map((r, i) => `
+      <tr>
+        <td class="rt-check"><input type="checkbox" id="rchk-${i}" onchange="updateBudget()"></td>
+        <td>${r.service}<div style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">${r.unit}</div></td>
+        <td class="rt-price">${fmtN(r.price)}</td>
+        <td class="rt-qty"><input type="number" min="1" value="1" id="rqty-${i}" onchange="updateBudget()"></td>
+        <td>${EDIT_MODE ? `<button class="item-del" onclick="deleteRate(${i})">×</button>` : ''}</td>
+      </tr>`).join('');
+    updateBudget();
+  }
+  function updateBudget() {
+    let total = 0;
+    const lines = [];
+    if (selectedPackage) {
+      total += selectedPackage.price;
+      lines.push(`<div class="budget-line"><span>Package: ${selectedPackage.name}</span><span>${fmtN(selectedPackage.price)}</span></div>`);
+    }
+    rates.forEach((r, i) => {
+      const chk = document.getElementById('rchk-' + i);
+      if (chk && chk.checked) {
+        const qty = parseFloat(document.getElementById('rqty-' + i).value) || 1;
+        const sub = r.price * qty;
+        total += sub;
+        lines.push(`<div class="budget-line"><span>${r.service} × ${qty}</span><span>${fmtN(sub)}</span></div>`);
+      }
+    });
+    document.getElementById('budgetLines').innerHTML = lines.length ? lines.join('') : '<div class="budget-line"><span>Select a package or services above to build your budget</span><span></span></div>';
+    document.getElementById('budgetTotal').textContent = fmtN(total);
+  }
+  async function addRate() {
+    const service = prompt('Service name:'); if (!service) return;
+    const unit = prompt('Unit (e.g. per day, per hour, per project):', 'per day') || '';
+    const price = parseFloat(prompt('Price in NAD:', '0')) || 0;
+    rates.push({ service, unit, price });
+    await saveList('rates', rates);
+    renderRates();
+  }
+  async function deleteRate(i) {
+    rates.splice(i, 1); await saveList('rates', rates); renderRates();
+  }
+  const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-quote-request`;
+  async function sendViaFunction(subject, body, replyTo) {
+    try {
+      const res = await fetch(EDGE_FUNCTION_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
+        body: JSON.stringify({ subject, body, replyTo })
+      });
+      if (!res.ok) throw new Error('send failed');
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  async function sendBudget(btn) {
+    const project = document.getElementById('qfProject').value.trim();
+    const name = document.getElementById('qfName').value.trim();
+    const email = document.getElementById('qfEmail').value.trim();
+    const details = document.getElementById('qfDetails').value.trim();
+    if (!project || !name || !email) { alert('Please fill in your name, email, and project name.'); return; }
+    let body = `Project: ${project}\nFrom: ${name} (${email})\n\nProject details:\n${details}\n\n--- Budget ---\n`;
+    let total = 0;
+    if (selectedPackage) {
+      total += selectedPackage.price;
+      body += `Package: ${selectedPackage.name} (${selectedPackage.unit}), ${fmtN(selectedPackage.price)}\n`;
+    }
+    rates.forEach((r, i) => {
+      const chk = document.getElementById('rchk-' + i);
+      if (chk && chk.checked) {
+        const qty = parseFloat(document.getElementById('rqty-' + i).value) || 1;
+        const sub = r.price * qty;
+        total += sub;
+        body += `${r.service} x ${qty} (${r.unit}), ${fmtN(sub)}\n`;
+      }
+    });
+    body += `\nEstimated Total: ${fmtN(total)}`;
+    const subject = `Budget Request: ${project}`;
+    const sentBtn = btn;
+    sentBtn.textContent = 'Sending...';
+    const ok = await sendViaFunction(subject, body, email);
+    if (ok) {
+      sentBtn.textContent = 'Sent! Thank you.';
+    } else {
+      sentBtn.textContent = 'Send Budget Request';
+      const mailto = `mailto:stevenpendragon97@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+    }
+  }
+  async function sendCustomRequest(btn) {
+    const name = document.getElementById('cfName').value.trim();
+    const email = document.getElementById('cfEmail').value.trim();
+    const company = document.getElementById('cfCompany').value.trim();
+    const details = document.getElementById('cfDetails').value.trim();
+    if (!name || !email || !details) { alert('Please fill in your name, email, and project details.'); return; }
+    const body = `From: ${name} (${email})\n${company ? 'Company: ' + company + '\n' : ''}\nProject details:\n${details}\n\nRequesting a custom invoice, not a standard package/rate.`;
+    const subject = `Custom Invoice Request from ${name}`;
+    const sentBtn = btn;
+    sentBtn.textContent = 'Sending...';
+    const ok = await sendViaFunction(subject, body, email);
+    if (ok) {
+      sentBtn.textContent = 'Sent! Thank you.';
+    } else {
+      sentBtn.textContent = 'Request Custom Invoice';
+      const mailto = `mailto:stevenpendragon97@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+    }
+  }
+
+  // ================= Video embed =================
+  function toEmbedUrl(url) {
+    url = url.trim();
+    const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{6,})/);
+    if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+    const vim = url.match(/vimeo\.com\/(\d+)/);
+    if (vim) return `https://player.vimeo.com/video/${vim[1]}`;
+    return '';
+  }
+  async function setVideo() {
+    const input = document.getElementById('videoUrlInput');
+    const embed = toEmbedUrl(input.value);
+    if (!embed) { alert('Paste a valid YouTube or Vimeo link.'); return; }
+    document.getElementById('videoFrame').src = embed;
+    document.getElementById('videoFrameWrap').classList.add('show');
+    await saveList('bts-video-url', input.value.trim());
+  }
+  async function loadVideo() {
+    const url = await loadList('bts-video-url', '');
+    if (url) {
+      document.getElementById('videoUrlInput').value = url;
+      const embed = toEmbedUrl(url);
+      if (embed) { document.getElementById('videoFrame').src = embed; document.getElementById('videoFrameWrap').classList.add('show'); }
+    }
+  }
+
+  // ================= Init =================
+  function renderAll() {
+    renderFilms(); renderSkills(); renderExperience(); renderTeaching(); renderAllPillRows(); renderRates(); renderPackages();
+    document.querySelectorAll('.edit-only').forEach(el => el.style.display = EDIT_MODE ? '' : 'none');
+  }
+  async function init() {
+    await applyAuthState();
+    sb.auth.onAuthStateChange((_event, _session) => { applyAuthState(); });
+    films = await loadList('films', DEFAULT_FILMS);
+    skills = await loadList('skills', DEFAULT_SKILLS);
+    experience = await loadList('experience', DEFAULT_EXPERIENCE);
+    teaching = await loadList('teaching', DEFAULT_TEACHING);
+    companies = await loadList('companies', DEFAULT_COMPANIES);
+    commercial = await loadList('commercial', DEFAULT_COMMERCIAL);
+    events = await loadList('events', DEFAULT_EVENTS);
+    clients = await loadList('clients', DEFAULT_CLIENTS);
+    rates = await loadList('rates', DEFAULT_RATES);
+    packages = await loadList('packages', DEFAULT_PACKAGES);
+    renderAll();
+    loadVideo();
+  }
+  init();
+</script>
+
+</body>
+</html>
