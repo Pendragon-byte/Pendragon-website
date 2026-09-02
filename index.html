@@ -518,7 +518,47 @@
   // ================= Supabase =================
   const SUPABASE_URL = 'https://svbasaqznniefsjjpngo.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_KOYJ6AoymEghhf63Qb08PQ_iVy5hiIW';
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);// ===============================
+// SUPABASE GALLERY IMAGE UPLOAD
+// ===============================
+
+async function uploadSetImage(file) {
+  if (!file) return null;
+
+  // Only allow images
+  if (!file.type.startsWith('image/')) {
+    alert('Please select an image file.');
+    return null;
+  }
+
+  const extension = file.name.split('.').pop().toLowerCase();
+
+  const filePath =
+    `sets/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+
+  const { error } = await sb.storage
+    .from('Gallery')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type
+    });
+
+  if (error) {
+    console.error('Upload error:', error);
+    alert('Image upload failed: ' + error.message);
+    return null;
+  }
+
+  const { data } = sb.storage
+    .from('Gallery')
+    .getPublicUrl(filePath);
+
+  return {
+    url: data.publicUrl,
+    path: filePath
+  };
+}
 
   let EDIT_MODE = false;
 
