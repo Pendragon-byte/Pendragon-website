@@ -132,6 +132,25 @@
   .add-pill-btn { background: none; border: 1px dashed var(--border); color: var(--text-muted); font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; padding: 6px 12px; margin-left: 6px; }
   .add-pill-btn:hover { border-color: var(--brass); color: var(--brass-light); }
 
+  /* ---------- Admin organiser ---------- */
+  .organize-btn { background:none; border:1px solid var(--border); color:var(--text-soft); padding:7px 12px; font-size:11px; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; margin-left:8px; }
+  .organize-btn:hover { border-color:var(--brass); color:var(--brass-light); }
+  .organizer-panel { position:fixed; inset:0; z-index:2000; background:rgba(10,10,12,.78); display:none; align-items:center; justify-content:center; padding:24px; }
+  .organizer-panel.show { display:flex; }
+  .organizer-box { width:min(760px,100%); max-height:90vh; overflow:auto; background:var(--surface); border:1px solid var(--border); padding:28px; box-shadow:0 20px 70px rgba(0,0,0,.45); }
+  .organizer-head { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:22px; }
+  .organizer-head h3 { margin:0; font-family:var(--serif-display); font-size:24px; font-weight:500; }
+  .organizer-close { background:none; border:0; color:var(--text-muted); cursor:pointer; font-size:12px; text-transform:uppercase; letter-spacing:1px; }
+  .organizer-group { margin-top:24px; }
+  .organizer-group-title { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--brass-light); margin-bottom:10px; }
+  .organizer-list { display:flex; flex-direction:column; gap:7px; min-height:10px; }
+  .organizer-item { display:flex; align-items:center; gap:12px; background:var(--bg); border:1px solid var(--border); padding:12px 14px; cursor:grab; user-select:none; }
+  .organizer-item.dragging { opacity:.45; border-color:var(--brass); }
+  .organizer-grip { color:var(--text-muted); font-size:16px; letter-spacing:-3px; width:22px; }
+  .organizer-label { color:var(--text); font-size:13px; }
+  .organizer-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:24px; padding-top:18px; border-top:1px solid var(--border-soft); }
+  .organizer-actions button { padding:10px 16px; border:1px solid var(--border); background:none; color:var(--text-soft); cursor:pointer; text-transform:uppercase; font-size:11px; letter-spacing:.8px; }
+  .organizer-actions .save { background:var(--brass); border-color:var(--brass); color:#17171a; font-weight:600; }
   /* ---------- Services ---------- */
   .services-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 28px; }
   .service-tag { border: 1px solid var(--border); background: var(--surface); padding: 22px 20px; text-align: center; font-family: var(--serif-display); font-size: 16px; letter-spacing: 1px; text-transform: uppercase; color: var(--text); transition: border-color 0.25s ease, transform 0.25s ease; }
@@ -339,7 +358,7 @@
     <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
   </div>
 </nav>
-<div class="edit-banner" id="editBanner">Edit Mode is on: add, edit, or remove content across the site. <button type="button" onclick="doLogout()" style="background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;padding:0;margin-left:4px;">Log out</button></div>
+<div class="edit-banner" id="editBanner">Edit Mode is on: add, edit, remove, or organise content across the site. <button type="button" class="organize-btn" onclick="openOrganizer()">Organise</button> <button type="button" onclick="doLogout()" style="background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;padding:0;margin-left:4px;">Log out</button></div>
 
 <div class="login-panel" id="loginPanel">
   <div class="login-box">
@@ -421,12 +440,7 @@
     <section class="block" style="padding-top:120px;">
       <div class="eyebrow">Work</div>
       <h2 class="section-title">Available For Hire As</h2>
-      <div class="services-row">
-        <div class="service-tag">Director of Photography</div>
-        <div class="service-tag">Camera Operator</div>
-        <div class="service-tag">Gaffer</div>
-        <div class="service-tag">Editor</div>
-      </div>
+      <div class="services-row" id="servicesRow"></div>
 
       <div class="tc-strip"></div>
 
@@ -499,13 +513,16 @@
 
       <div class="tc-strip"></div>
 
-      <div class="section-head-row"><h2 class="section-title small">Packages: Once Off Day Rates</h2></div>
-      <p class="section-sub">Flat rates for common shoot sizes. Request one and it drops straight into the form below.</p>
-      <div class="pkg-grid" id="pkgGrid"></div>
+      <div class="rate-section" id="rateSection-packages">
+        <div class="section-head-row"><h2 class="section-title small">Packages: Once Off Day Rates</h2></div>
+        <p class="section-sub">Flat rates for common shoot sizes. Request one and it drops straight into the form below.</p>
+        <div class="pkg-grid" id="pkgGrid"></div>
+      </div>
 
       <div class="tc-strip"></div>
 
-      <div class="section-head-row"><h2 class="section-title small">Build a Custom Budget</h2></div>
+      <div class="rate-section" id="rateSection-budget">
+        <div class="section-head-row"><h2 class="section-title small">Build a Custom Budget</h2></div>
       <p class="section-sub">Select individual services and quantities for a project that doesn't fit a package.</p>
       <table class="rate-table">
         <thead><tr><th></th><th>Service</th><th>Rate</th><th>Qty</th><th></th></tr></thead>
@@ -540,9 +557,11 @@
         <button class="send-btn" onclick="sendBudget(this)">Send Budget Request</button>
         <p class="video-hint">This opens your email app with the budget pre-filled, addressed to Steven. Hit send from there.</p>
       </div>
+      </div>
 
       <div class="divider-label">or</div>
 
+      <div class="rate-section" id="rateSection-invoice">
       <div class="custom-box">
         <h2 class="section-title small">Request a Custom Invoice</h2>
         <p>Bigger production, multi-day event, or something that doesn't map to a standard rate? Describe it and Steven will put together a proper invoice and send it back to you directly.</p>
@@ -567,7 +586,20 @@
           <p class="video-hint">Opens your email app addressed to Steven. He'll follow up with a tailored invoice.</p>
         </div>
       </div>
+      </div>
     </section>
+  </div>
+</div>
+
+<!-- ================= ADMIN ORGANISER ================= -->
+<div class="organizer-panel" id="organizerPanel" onclick="closeOrganizer(event)">
+  <div class="organizer-box">
+    <div class="organizer-head"><h3>Organise Website</h3><button class="organizer-close" onclick="closeOrganizer()">Close</button></div>
+    <p class="section-sub" style="margin-top:0;">Drag items into the order you want. The saved order is shown to visitors.</p>
+    <div class="organizer-group"><div class="organizer-group-title">Rates Sections</div><div class="organizer-list" id="rateSectionsOrganizer"></div></div>
+    <div class="organizer-group"><div class="organizer-group-title">Services</div><div class="organizer-list" id="servicesOrganizer"></div></div>
+    <div class="organizer-group"><div class="organizer-group-title">Custom Budget Services</div><div class="organizer-list" id="ratesOrganizer"></div></div>
+    <div class="organizer-actions"><button onclick="resetOrganizer()">Reset Order</button><button class="save" onclick="saveOrganizer()">Save Order</button></div>
   </div>
 </div>
 
@@ -680,6 +712,11 @@ async function uploadSetImage(file, setId = 'general') {
 }
 
   let EDIT_MODE = false;
+  const DEFAULT_SERVICES = ['Director of Photography','Camera Operator','Gaffer','Editor'];
+  const DEFAULT_RATE_SECTION_ORDER = ['packages','budget','invoice'];
+  let services = [];
+  let rateSectionOrder = [...DEFAULT_RATE_SECTION_ORDER];
+  let organizerRates = [];
 
   function openLoginPanel() {
     document.getElementById('loginError').textContent = '';
@@ -707,6 +744,84 @@ async function uploadSetImage(file, setId = 'general') {
     document.getElementById('editBanner').classList.toggle('show', EDIT_MODE);
     document.querySelectorAll('.edit-only').forEach(el => el.style.display = EDIT_MODE ? '' : 'none');
     renderAll();
+  }
+
+  // ================= Website organiser =================
+  function normalizeOrder(items, defaults) {
+    const source = Array.isArray(items) ? items : [];
+    const out = source.filter(x => defaults.includes(x));
+    defaults.forEach(x => { if (!out.includes(x)) out.push(x); });
+    return out;
+  }
+  function renderServices() {
+    const row = document.getElementById('servicesRow');
+    if (!row) return;
+    row.innerHTML = services.map((name, i) => `<div class="service-tag">${name}${EDIT_MODE ? `<button class="item-del" style="display:block;margin:9px auto 0;" onclick="event.stopPropagation();deleteService(${i})">× Remove</button>` : ''}</div>`).join('');
+  }
+  async function addService() {
+    const name = prompt('Service name:'); if (!name) return;
+    services.push(name.trim()); await saveList('services', services); renderServices();
+  }
+  async function deleteService(i) {
+    if (!confirm('Remove this service?')) return;
+    services.splice(i, 1); await saveList('services', services); renderServices();
+  }
+  function makeSortable(list) {
+    let dragged = null;
+    list.querySelectorAll('.organizer-item').forEach(item => {
+      item.draggable = true;
+      item.addEventListener('dragstart', () => { dragged = item; item.classList.add('dragging'); });
+      item.addEventListener('dragend', () => { item.classList.remove('dragging'); dragged = null; });
+      item.addEventListener('dragover', e => {
+        e.preventDefault(); if (!dragged || dragged === item) return;
+        const r = item.getBoundingClientRect();
+        list.insertBefore(dragged, e.clientY < r.top + r.height / 2 ? item : item.nextSibling);
+      });
+    });
+  }
+  function renderOrganizerList(id, items, labels) {
+    const list = document.getElementById(id);
+    list.innerHTML = items.map(x => `<div class="organizer-item" data-value="${x}"><span class="organizer-grip">⋮⋮</span><span class="organizer-label">${labels[x] || x}</span></div>`).join('');
+    makeSortable(list);
+  }
+  function readOrganizerList(id) { return Array.from(document.querySelectorAll('#' + id + ' .organizer-item')).map(x => x.dataset.value); }
+  function openOrganizer() {
+    if (!EDIT_MODE) return;
+    renderOrganizerList('rateSectionsOrganizer', rateSectionOrder, {packages:'Packages: Once Off Day Rates', budget:'Build a Custom Budget', invoice:'Request a Custom Invoice'});
+    renderOrganizerList('servicesOrganizer', services, {});
+    organizerRates = rates.map((r, i) => String(i));
+    renderOrganizerList('ratesOrganizer', organizerRates, Object.fromEntries(rates.map((r, i) => [String(i), `${r.service} — ${fmtN(r.price)} ${r.unit ? '(' + r.unit + ')' : ''}`])));
+    document.getElementById('organizerPanel').classList.add('show');
+  }
+  function closeOrganizer(event) {
+    if (event && event.target !== document.getElementById('organizerPanel')) return;
+    document.getElementById('organizerPanel').classList.remove('show');
+  }
+  async function saveOrganizer() {
+    rateSectionOrder = normalizeOrder(readOrganizerList('rateSectionsOrganizer'), DEFAULT_RATE_SECTION_ORDER);
+    services = readOrganizerList('servicesOrganizer');
+    const newRateOrder = readOrganizerList('ratesOrganizer').map(Number).filter(i => Number.isInteger(i) && rates[i]);
+    if (newRateOrder.length === rates.length) rates = newRateOrder.map(i => rates[i]);
+    await saveList('rate-section-order', rateSectionOrder);
+    await saveList('services', services);
+    await saveList('rates', rates);
+    applyRateSectionOrder(); renderServices(); renderRates(); closeOrganizer();
+  }
+  async function resetOrganizer() {
+    if (!confirm('Reset services and rate sections to the default order?')) return;
+    rateSectionOrder = [...DEFAULT_RATE_SECTION_ORDER]; services = [...DEFAULT_SERVICES];
+    await saveList('rate-section-order', rateSectionOrder); await saveList('services', services);
+    applyRateSectionOrder(); renderServices(); openOrganizer();
+  }
+  function applyRateSectionOrder() {
+    const block = document.querySelector('#page-rates .block'); if (!block) return;
+    const nodes = rateSectionOrder.map(x => document.getElementById('rateSection-' + x)).filter(Boolean);
+    const divider = block.querySelector('.divider-label');
+    nodes.forEach(n => block.appendChild(n));
+    if (divider) {
+      const invoice = document.getElementById('rateSection-invoice');
+      block.insertBefore(divider, invoice);
+    }
   }
 
   // ================= Generic storage helpers (Supabase) =================
@@ -1323,7 +1438,7 @@ async function uploadSetImage(file, setId = 'general') {
 
   // ================= Init =================
   function renderAll() {
-    renderFilms(); renderSkills(); renderExperience(); renderTeaching(); renderAllPillRows(); renderSets(); renderRates(); renderPackages();
+    renderFilms(); renderSkills(); renderExperience(); renderTeaching(); renderAllPillRows(); renderSets(); renderRates(); renderPackages(); renderServices(); applyRateSectionOrder();
     document.querySelectorAll('.edit-only').forEach(el => el.style.display = EDIT_MODE ? '' : 'none');
   }
   async function init() {
@@ -1339,6 +1454,8 @@ async function uploadSetImage(file, setId = 'general') {
     clients = await loadList('clients', DEFAULT_CLIENTS);
     rates = await loadList('rates', DEFAULT_RATES);
     packages = await loadList('packages', DEFAULT_PACKAGES);
+    services = await loadList('services', DEFAULT_SERVICES);
+    rateSectionOrder = normalizeOrder(await loadList('rate-section-order', DEFAULT_RATE_SECTION_ORDER), DEFAULT_RATE_SECTION_ORDER);
     sets = await loadList('sets-gallery', []);
     renderAll();
     loadVideo();
