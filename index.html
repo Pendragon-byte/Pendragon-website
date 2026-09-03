@@ -165,6 +165,83 @@
   .demo-note { margin-top: 40px; padding: 16px 20px; border: 1px dashed var(--border); background: var(--surface); font-size: 13px; color: var(--text-muted); line-height: 1.7; }
   .demo-note strong { color: var(--text-soft); }
 
+
+  /* ---------- Sets / Gallery ---------- */
+  .sets-intro { max-width: 720px; }
+  .sets-toolbar { margin-top: 28px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .sets-upload-label, .sets-create-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--brass); color: var(--brass-light);
+    padding: 12px 18px; font-size: 12px; letter-spacing: 1px;
+    text-transform: uppercase; cursor: pointer; transition: all 0.2s ease;
+    background: none;
+  }
+  .sets-upload-label:hover, .sets-create-btn:hover { background: var(--brass); color: #17171a; }
+  .sets-upload-label input { display: none; }
+  .sets-upload-status { font-size: 12.5px; color: var(--text-muted); min-height: 20px; }
+  .sets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .set-card {
+    position: relative; overflow: hidden; background: var(--surface);
+    border: 1px solid var(--border); min-height: 270px; cursor: pointer;
+    transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
+  }
+  .set-card:hover { border-color: var(--brass); transform: translateY(-3px); background: var(--surface-2); }
+  .set-card-cover { width: 100%; height: 270px; object-fit: cover; display: block; }
+  .set-card-overlay {
+    position: absolute; inset: auto 0 0 0; padding: 44px 18px 17px;
+    background: linear-gradient(transparent, rgba(10,10,12,0.94));
+  }
+  .set-card-name { font-family: var(--serif-display); font-size: 21px; letter-spacing: 0.4px; color: var(--text); }
+  .set-card-meta { margin-top: 4px; font-size: 11.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--brass-light); }
+  .set-card-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 7px; z-index: 2; }
+  .set-admin-btn {
+    border: 1px solid rgba(255,255,255,0.25); background: rgba(15,15,17,0.84);
+    color: #fff; padding: 7px 10px; font-size: 10.5px; letter-spacing: 0.7px; text-transform: uppercase;
+  }
+  .set-admin-btn:hover { border-color: var(--brass); color: var(--brass-light); }
+  .set-admin-btn.danger:hover { border-color: #c65b4a; color: #ffd8cf; }
+  .set-card-empty {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 220px; border: 1px dashed var(--border);
+    color: var(--text-muted); font-size: 13px; text-align: center; padding: 24px;
+    grid-column: 1 / -1;
+  }
+  .set-admin-tools { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .set-admin-tools button {
+    background: none; border: 1px dashed var(--border); color: var(--text-muted);
+    padding: 8px 12px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase;
+  }
+  .set-admin-tools button:hover { border-color: var(--brass); color: var(--brass-light); }
+
+  /* ---------- Set lightbox ---------- */
+  .set-lightbox { display: none; position: fixed; inset: 0; z-index: 250; background: rgba(5,5,7,0.96); overflow-y: auto; padding: 78px 24px 40px; }
+  .set-lightbox.show { display: block; }
+  .set-lightbox-inner { max-width: 1180px; margin: 0 auto; }
+  .set-lightbox-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
+  .set-lightbox-title { font-family: var(--serif-display); font-size: 30px; color: var(--text); }
+  .set-lightbox-count { margin-top: 3px; color: var(--text-muted); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .set-lightbox-close { background: none; border: 1px solid var(--border); color: var(--text-soft); padding: 9px 13px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+  .set-lightbox-close:hover { border-color: var(--brass); color: var(--brass-light); }
+  .set-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .set-gallery-image { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; border: 1px solid var(--border); cursor: zoom-in; transition: border-color 0.2s ease, transform 0.2s ease; }
+  .set-gallery-image:hover { border-color: var(--brass); transform: scale(1.01); }
+  .set-lightbox-admin { margin-top: 24px; display: flex; gap: 9px; flex-wrap: wrap; }
+  .set-lightbox-admin label { display: inline-flex; }
+  .set-lightbox-admin button, .set-lightbox-admin label span { background: none; border: 1px solid var(--border); color: var(--text-muted); padding: 9px 13px; font-size: 11px; letter-spacing: 0.7px; text-transform: uppercase; cursor: pointer; }
+  .set-lightbox-admin button:hover, .set-lightbox-admin label span:hover { border-color: var(--brass); color: var(--brass-light); }
+  .set-lightbox-admin input { display: none; }
+  @media (max-width: 560px) {
+    .sets-grid { grid-template-columns: 1fr; }
+    .set-gallery-grid { grid-template-columns: 1fr; }
+    .set-lightbox { padding-left: 14px; padding-right: 14px; }
+    .set-lightbox-title { font-size: 24px; }
+  }
+
   /* ---------- Rates page ---------- */
   .rate-table { width: 100%; border-collapse: collapse; margin-top: 28px; }
   .rate-table th { text-align: left; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--brass); padding-bottom: 12px; border-bottom: 1px solid var(--border); }
@@ -220,8 +297,10 @@
   .contact-list .cl-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
   .contact-list .cl-value { font-size: 18px; color: var(--text); transition: color 0.2s ease; }
   .contact-list a:hover .cl-value { color: var(--brass-light); }
-  .pdf-btn { display: inline-block; margin-top: 28px; padding: 16px 30px; border: 1px solid var(--brass); color: var(--brass-light); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; transition: all 0.25s ease; background: none; }
-  .pdf-btn:hover { background: var(--brass); color: #17171a; }
+  .contact-signature { margin-top: 46px; font-family: var(--serif-display); font-size: 18px; letter-spacing: 0.4px; color: var(--text-soft); }
+  .contact-signature button { appearance: none; border: 0; background: none; padding: 0; margin: 0; color: inherit; font: inherit; letter-spacing: inherit; cursor: pointer; }
+  .contact-signature button:hover { color: var(--brass-light); }
+  .contact-signature .signature-role { display: block; margin-top: 5px; font-family: var(--sans); font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--text-muted); }
   .video-box { border: 1px solid var(--border); background: var(--surface); padding: 26px; }
   .video-box h3 { font-family: var(--serif-display); font-size: 15px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-soft); margin-bottom: 16px; }
   .video-frame-wrap { position: relative; width: 100%; padding-top: 56.25%; background: #0e0e10; border: 1px solid var(--brass); margin-top: 14px; display: none; }
@@ -257,11 +336,10 @@
       <li><button data-page="rates" onclick="goTo('rates')">Rates</button></li>
       <li><button data-page="contact" onclick="goTo('contact')">Contact</button></li>
     </ul>
-    <button class="edit-toggle" id="editToggleBtn" onclick="handleEditToggleClick()">Log In</button>
     <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
   </div>
 </nav>
-<div class="edit-banner" id="editBanner">Edit Mode is on: add, edit, or remove content across the site. Log out before sharing with clients.</div>
+<div class="edit-banner" id="editBanner">Edit Mode is on: add, edit, or remove content across the site. <button type="button" onclick="doLogout()" style="background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;padding:0;margin-left:4px;">Log out</button></div>
 
 <div class="login-panel" id="loginPanel">
   <div class="login-box">
@@ -356,10 +434,6 @@
       <p class="section-sub">Click a card to view the project. Links are added per production below.</p>
       <div class="film-grid" id="filmGrid"></div>
 
-      <div class="demo-note">
-        <strong>Preview mode:</strong> everything you add here (project links, new productions, companies) saves in this browser so you can see exactly how it behaves. When this goes live on a real host, the same add/edit actions need a backend to save for every visitor (see note at the end of chat).
-      </div>
-
       <div class="tc-strip"></div>
 
       <div class="section-head-row"><h2 class="section-title small">Commercial &amp; Corporate Production</h2></div>
@@ -375,6 +449,43 @@
       <div class="section-head-row"><h2 class="section-title small">Notable Clients</h2></div>
       <div class="companies-row" id="clientsRow"></div>
     </section>
+  </div>
+</div>
+
+
+<!-- ================= SETS ================= -->
+<div class="page" id="page-sets">
+  <div class="wrap">
+    <section class="block" style="padding-top:120px;">
+      <div class="eyebrow">Sets</div>
+      <h2 class="section-title">On Set</h2>
+      <p class="profile-text sets-intro" style="font-size:16px;">
+        A visual archive of the sets, productions, and environments behind the work.
+        Each set can contain its own collection of behind-the-scenes photographs.
+      </p>
+
+      <div class="sets-toolbar edit-only">
+        <button class="sets-create-btn" onclick="createSet()">+ Create Set</button>
+        <span class="sets-upload-status" id="setsUploadStatus"></span>
+      </div>
+
+      <div class="sets-grid" id="setsGrid"></div>
+    </section>
+  </div>
+</div>
+
+<!-- ================= SET LIGHTBOX ================= -->
+<div class="set-lightbox" id="setLightbox" onclick="closeSetGallery(event)">
+  <div class="set-lightbox-inner">
+    <div class="set-lightbox-head">
+      <div>
+        <div class="set-lightbox-title" id="setLightboxTitle">Set</div>
+        <div class="set-lightbox-count" id="setLightboxCount"></div>
+      </div>
+      <button class="set-lightbox-close" onclick="closeSetGallery()">Close</button>
+    </div>
+    <div class="set-gallery-grid" id="setGalleryGrid"></div>
+    <div class="set-lightbox-admin edit-only" id="setLightboxAdmin"></div>
   </div>
 </div>
 
@@ -475,7 +586,10 @@
             <li><a href="https://instagram.com/stevenpendragon" target="_blank" rel="noopener"><div class="cl-label">Instagram</div><div class="cl-value">@stevenpendragon</div></a></li>
             <li><a href="https://www.youtube.com/@stevenpendragon" target="_blank" rel="noopener"><div class="cl-label">YouTube</div><div class="cl-value">youtube.com/@stevenpendragon</div></a></li>
           </ul>
-          <button class="pdf-btn" onclick="alert('Wire this button to your hosted PDF file link once the site is live, e.g. /assets/pendragon_bio.pdf')">Download Bio (PDF)</button>
+          <div class="contact-signature">
+            <button type="button" onclick="openLoginPanel()" aria-label="Steven Pendragon">Steven Pendragon</button>
+            <span class="signature-role">Filmmaker</span>
+          </div>
         </div>
         <div class="video-box">
           <h3>Behind the Scenes</h3>
@@ -507,8 +621,13 @@
 <script>
   // ================= Navigation =================
   function goTo(page) {
+    const target = document.getElementById('page-' + page);
+    if (!target) {
+      console.error('Page not found:', page);
+      return;
+    }
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + page).classList.add('active');
+    target.classList.add('active');
     document.querySelectorAll('.nav-links button').forEach(b => b.classList.toggle('active', b.dataset.page === page));
     document.getElementById('navLinks').classList.remove('open');
     window.scrollTo(0, 0);
@@ -522,19 +641,19 @@
 // SUPABASE GALLERY IMAGE UPLOAD
 // ===============================
 
-async function uploadSetImage(file) {
+async function uploadSetImage(file, setId = 'general') {
   if (!file) return null;
 
-  // Only allow images
   if (!file.type.startsWith('image/')) {
     alert('Please select an image file.');
     return null;
   }
 
-  const extension = file.name.split('.').pop().toLowerCase();
-
-  const filePath =
-    `sets/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+  const extension = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const uniqueId = (window.crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const filePath = `sets/${setId}/${Date.now()}-${uniqueId}.${extension}`;
 
   const { error } = await sb.storage
     .from('Gallery')
@@ -582,14 +701,9 @@ async function uploadSetImage(file) {
     await sb.auth.signOut();
     await applyAuthState();
   }
-  function handleEditToggleClick() {
-    if (EDIT_MODE) { doLogout(); } else { openLoginPanel(); }
-  }
   async function applyAuthState() {
     const { data } = await sb.auth.getSession();
     EDIT_MODE = !!data.session;
-    document.getElementById('editToggleBtn').textContent = EDIT_MODE ? 'Log Out' : 'Log In';
-    document.getElementById('editToggleBtn').classList.toggle('on', EDIT_MODE);
     document.getElementById('editBanner').classList.toggle('show', EDIT_MODE);
     document.querySelectorAll('.edit-only').forEach(el => el.style.display = EDIT_MODE ? '' : 'none');
     renderAll();
@@ -824,6 +938,203 @@ async function uploadSetImage(file) {
     renderPillRow(key);
   }
 
+
+  // ================= Sets / Gallery =================
+  let sets = [];
+  let activeSetId = null;
+
+  function setId() {
+    return 'set-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+  }
+
+  function normalizeSets(raw) {
+    if (!Array.isArray(raw)) return [];
+    // Preserve the previous flat-image gallery format if one existed.
+    if (raw.length && raw.every(x => x && typeof x === 'object' && !Array.isArray(x) && x.url)) {
+      return [{ id: 'legacy-set', name: 'Previous Set Images', images: raw }];
+    }
+    return raw.map((set, i) => ({
+      id: set.id || ('set-' + i),
+      name: set.name || 'Untitled Set',
+      images: Array.isArray(set.images) ? set.images : []
+    }));
+  }
+
+  function safeText(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  }
+
+  function setCardHTML(set) {
+    const cover = set.images && set.images[0];
+    if (!cover) {
+      return `<div class="set-card" onclick="openSetGallery('${set.id}')">
+        <div class="set-card-empty" style="height:270px;border:none;">${safeText(set.name)}<br>No images yet.</div>
+        ${EDIT_MODE ? `<div class="set-card-actions"><button class="set-admin-btn" onclick="event.stopPropagation(); addImagesToSet('${set.id}')">Add Images</button><button class="set-admin-btn danger" onclick="event.stopPropagation(); deleteSet('${set.id}')">Delete</button></div>` : ''}
+      </div>`;
+    }
+    const safeUrl = String(cover.url || '').replace(/"/g, '&quot;');
+    const count = set.images.length;
+    return `<div class="set-card" onclick="openSetGallery('${set.id}')">
+      <img class="set-card-cover" src="${safeUrl}" alt="${safeText(set.name)}" loading="lazy">
+      <div class="set-card-overlay">
+        <div class="set-card-name">${safeText(set.name)}</div>
+        <div class="set-card-meta">${count} image${count === 1 ? '' : 's'} · View gallery</div>
+      </div>
+      ${EDIT_MODE ? `<div class="set-card-actions">
+        <button class="set-admin-btn" onclick="event.stopPropagation(); addImagesToSet('${set.id}')">Add Images</button>
+        <button class="set-admin-btn" onclick="event.stopPropagation(); renameSet('${set.id}')">Rename</button>
+        <button class="set-admin-btn danger" onclick="event.stopPropagation(); deleteSet('${set.id}')">Delete</button>
+      </div>` : ''}
+    </div>`;
+  }
+
+  function renderSets() {
+    const grid = document.getElementById('setsGrid');
+    if (!grid) return;
+    if (!sets.length) {
+      grid.innerHTML = `<div class="set-card-empty">${EDIT_MODE ? 'No sets yet. Use “Create Set” to make your first gallery.' : 'Set photography coming soon.'}</div>`;
+      return;
+    }
+    grid.innerHTML = sets.map(setCardHTML).join('');
+  }
+
+  async function createSet() {
+    if (!EDIT_MODE) return;
+    const name = prompt('Set name:');
+    if (!name || !name.trim()) return;
+    const set = { id: setId(), name: name.trim(), images: [] };
+    sets.unshift(set);
+    await saveList('sets-gallery', sets);
+    renderSets();
+    openSetGallery(set.id);
+  }
+
+  async function renameSet(id) {
+    if (!EDIT_MODE) return;
+    const set = sets.find(x => x.id === id);
+    if (!set) return;
+    const name = prompt('Set name:', set.name);
+    if (!name || !name.trim()) return;
+    set.name = name.trim();
+    await saveList('sets-gallery', sets);
+    renderSets();
+    if (activeSetId === id) renderSetGallery(set);
+  }
+
+  async function deleteSet(id) {
+    if (!EDIT_MODE) return;
+    const set = sets.find(x => x.id === id);
+    if (!set) return;
+    if (!confirm(`Delete the set “${set.name}” and all ${set.images.length} image${set.images.length === 1 ? '' : 's'} from storage?`)) return;
+
+    const paths = set.images.map(img => img.path).filter(Boolean);
+    if (paths.length) {
+      const { error } = await sb.storage.from('Gallery').remove(paths);
+      if (error) {
+        console.error('Set delete error:', error);
+        alert('Could not delete the set images: ' + error.message);
+        return;
+      }
+    }
+    sets = sets.filter(x => x.id !== id);
+    await saveList('sets-gallery', sets);
+    if (activeSetId === id) closeSetGallery();
+    renderSets();
+  }
+
+  async function addImagesToSet(id) {
+    if (!EDIT_MODE) return;
+    activeSetId = id;
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+    input.onchange = async (event) => await uploadFilesToSet(id, Array.from(event.target.files || []));
+    input.click();
+  }
+
+  async function uploadFilesToSet(id, files) {
+    if (!EDIT_MODE || !files.length) return;
+    const set = sets.find(x => x.id === id);
+    if (!set) return;
+    const status = document.getElementById('setsUploadStatus');
+    status.textContent = `Uploading 0 of ${files.length}...`;
+    let uploaded = 0;
+
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) continue;
+      const result = await uploadSetImage(file, id);
+      if (result) {
+        set.images.push(result);
+        uploaded++;
+        status.textContent = `Uploading ${uploaded} of ${files.length}...`;
+        if (activeSetId === id) renderSetGallery(set);
+      }
+    }
+
+    await saveList('sets-gallery', sets);
+    renderSets();
+    if (activeSetId === id) renderSetGallery(set);
+    status.textContent = uploaded === files.length
+      ? `${uploaded} image${uploaded === 1 ? '' : 's'} added to “${set.name}”.`
+      : `${uploaded} of ${files.length} images added.`;
+  }
+
+  function openSetGallery(id) {
+    const set = sets.find(x => x.id === id);
+    if (!set) return;
+    activeSetId = id;
+    renderSetGallery(set);
+    document.getElementById('setLightbox').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function renderSetGallery(set) {
+    document.getElementById('setLightboxTitle').textContent = set.name;
+    document.getElementById('setLightboxCount').textContent = `${set.images.length} image${set.images.length === 1 ? '' : 's'}`;
+    const grid = document.getElementById('setGalleryGrid');
+    grid.innerHTML = set.images.length
+      ? set.images.map((img, i) => {
+          const url = String(img.url || '').replace(/"/g, '&quot;');
+          const path = String(img.path || '').replace(/'/g, "\'");
+          return `<div style="position:relative;">
+            <img class="set-gallery-image" src="${url}" alt="${safeText(set.name)} — image ${i + 1}" loading="lazy" onclick="window.open('${url}', '_blank', 'noopener')">
+            ${EDIT_MODE ? `<button class="set-admin-btn danger" style="position:absolute;top:8px;right:8px;" onclick="event.stopPropagation(); deleteSetImage('${path}','${set.id}')">Delete</button>` : ''}
+          </div>`;
+        }).join('')
+      : `<div class="set-card-empty">${EDIT_MODE ? 'This set has no images yet. Add images below.' : 'No images in this set.'}</div>`;
+
+    const admin = document.getElementById('setLightboxAdmin');
+    admin.innerHTML = EDIT_MODE ? `
+      <button onclick="addImagesToSet('${set.id}')">+ Add Images</button>
+      <button onclick="renameSet('${set.id}')">Rename Set</button>
+      <button onclick="deleteSet('${set.id}')">Delete Set</button>` : '';
+  }
+
+  function closeSetGallery(event) {
+    if (event && event.target !== document.getElementById('setLightbox')) return;
+    document.getElementById('setLightbox').classList.remove('show');
+    document.body.style.overflow = '';
+    activeSetId = null;
+  }
+
+  async function deleteSetImage(path, setId) {
+    if (!EDIT_MODE || !path) return;
+    if (!confirm('Delete this image from the set?')) return;
+    const { error } = await sb.storage.from('Gallery').remove([path]);
+    if (error) {
+      console.error('Delete error:', error);
+      alert('Could not delete image: ' + error.message);
+      return;
+    }
+    const set = sets.find(x => x.id === setId);
+    if (!set) return;
+    set.images = set.images.filter(img => img.path !== path);
+    await saveList('sets-gallery', sets);
+    renderSets();
+    renderSetGallery(set);
+  }
+
   // ================= Rates / Budget calculator =================
   function fmtN(n) { return 'N$' + Number(n).toLocaleString('en-US'); }
   // ================= Packages =================
@@ -1012,7 +1323,7 @@ async function uploadSetImage(file) {
 
   // ================= Init =================
   function renderAll() {
-    renderFilms(); renderSkills(); renderExperience(); renderTeaching(); renderAllPillRows(); renderRates(); renderPackages();
+    renderFilms(); renderSkills(); renderExperience(); renderTeaching(); renderAllPillRows(); renderSets(); renderRates(); renderPackages();
     document.querySelectorAll('.edit-only').forEach(el => el.style.display = EDIT_MODE ? '' : 'none');
   }
   async function init() {
@@ -1028,6 +1339,7 @@ async function uploadSetImage(file) {
     clients = await loadList('clients', DEFAULT_CLIENTS);
     rates = await loadList('rates', DEFAULT_RATES);
     packages = await loadList('packages', DEFAULT_PACKAGES);
+    sets = await loadList('sets-gallery', []);
     renderAll();
     loadVideo();
   }
